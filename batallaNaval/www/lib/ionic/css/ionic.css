@@ -3351,6 +3351,7 @@ body.grade-c {
   position: relative; }
 
 .scroll-content {
+  background-color: lightslategray;
   position: absolute;
   top: 0;
   right: 0;
@@ -5695,7 +5696,7 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
  */
 .item {
   border-color: #ddd;
-  background-color: #fff;
+  background-color: lightslategray;
   color: #444;
   position: relative;
   z-index: 2;
@@ -5996,7 +5997,7 @@ button.item.item-complex {
   z-index: 2;
   padding: 16px 49px 16px 16px;
   border: none;
-  background-color: #fff; }
+  background-color: lightslategray; }
 
 a.item-content {
   display: block;
