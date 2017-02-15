@@ -45,7 +45,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       url: '/jugar',
       views: {
         'menuContent': {
-          templateUrl: 'templates/jugar.html'
+          templateUrl: 'templates/jugar.html',
+          controller: 'JugarCtrl'
         }
       }
     })
