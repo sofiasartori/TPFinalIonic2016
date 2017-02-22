@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 'starter.controllers', 'ionic.cloud'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $ionicPush) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -20,9 +20,28 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       StatusBar.styleDefault();
     }
   });
+  $ionicPush.register().then(function(t) {
+    return $ionicPush.saveToken(t);
+  }).then(function(t) {
+    console.log('Token saved:', t.token);
+  });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicCloudProvider) {
+  $ionicCloudProvider.init({
+        "core": {
+          "app_id": "26f96b04"
+        },
+        "push": {
+          "sender_id": "1023680257453",
+          "pluginConfig": {
+            "android": {
+              "iconColor": "#343434"
+            }   
+          }
+        }
+  });
+
   $stateProvider
 
     .state('app', {

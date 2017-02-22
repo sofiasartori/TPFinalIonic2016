@@ -19,12 +19,23 @@
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
-    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
-    <link href="css/ionic.app.css" rel="stylesheet">
-    -->
+    
+    <script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyAhI_XQxaOnLPBgfRbwCTeGa_CoSzbc4cg",
+        authDomain: "batalla-naval-3d1b2.firebaseapp.com",
+        databaseURL: "https://batalla-naval-3d1b2.firebaseio.com",
+        storageBucket: "batalla-naval-3d1b2.appspot.com",
+        messagingSenderId: "1023680257453"
+      };
+      firebase.initializeApp(config);
+    </script>
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/ionic.cloud.min.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
