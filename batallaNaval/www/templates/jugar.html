@@ -1,40 +1,59 @@
 <ion-view view-title="Jugar">
-  <ion-content>
-  <p>Eleg&iacute; y posicion&aacute; los barcos!</p>
-  <div class="row" style="height:180px;">
-  	<div class="col col-75">
-  		<img src="img/barco1.png" data-drag="true" jqyoui-draggable style="width:280px;">
-  		<img src="img/barco4.png" data-drag="true" jqyoui-draggable style="width:280px;">
-  	</div>
-  	<div class="col">
-  		<img src="img/barco2.png" data-drag="true" jqyoui-draggable style="width:40px; height:150px;">
-  		<img src="img/barco3.png" data-drag="true" jqyoui-draggable style="width:40px; height:150px;">
-  	</div>
-  </div>  
-    <div class="row">
-	  <div class="colGrid">A1</div>
-	  <div class="colGrid">B1</div>
-	  <div class="colGrid">C1</div>
-	  <div class="colGrid">D1</div>
-	</div>
-	<div class="row">
-	  <div class="colGrid">A2</div>
-	  <div class="colGrid">B2</div>
-	  <div class="colGrid">C2</div>
-	  <div class="colGrid">D2</div>
-	</div>
-	<div class="row">
-	  <div class="colGrid">A3</div>
-	  <div class="colGrid">B3</div>
-	  <div class="colGrid">C3</div>
-	  <div class="colGrid">D3</div>
-	</div>
-	<div class="row">
-	  <div class="colGrid">A4</div>
-	  <div class="colGrid">B4</div>
-	  <div class="colGrid">C4</div>
-	  <div class="colGrid">D4</div>
-	</div>
-	<button class="button button-block button-balanced">JUGAR</button>
-  </ion-content>
+	<ion-content>
+		<p>Eleg&iacute; y posicion&aacute; los barcos!</p>
+
+		<div class="row">
+			<div class="colGrid" ng-class="arrayClases[0][0]" ng-click="agregarBarcoPopUp(0,0)">A1</div>
+			<div class="colGrid" ng-class="arrayClases[0][1]" ng-click="agregarBarcoPopUp(0,1)">B1</div>
+			<div class="colGrid" ng-class="arrayClases[0][2]" ng-click="agregarBarcoPopUp(0,2)">C1</div>
+			<div class="colGrid" ng-class="arrayClases[0][3]" ng-click="agregarBarcoPopUp(0,3)">D1</div>
+			<div class="colGrid" ng-class="arrayClases[0][4]" ng-click="agregarBarcoPopUp(0,4)">C1</div>
+			<div class="colGrid" ng-class="arrayClases[0][5]" ng-click="agregarBarcoPopUp(0,5)">D1</div>
+		</div>
+		<div class="row">
+			<div class="colGrid" ng-class="arrayClases[1][0]" ng-click="agregarBarcoPopUp(1,0)">A1</div>
+			<div class="colGrid" ng-class="arrayClases[1][1]" ng-click="agregarBarcoPopUp(1,1)">B1</div>
+			<div class="colGrid" ng-class="arrayClases[1][2]" ng-click="agregarBarcoPopUp(1,2)">C1</div>
+			<div class="colGrid" ng-class="arrayClases[1][3]" ng-click="agregarBarcoPopUp(1,3)">D1</div>
+			<div class="colGrid" ng-class="arrayClases[1][4]" ng-click="agregarBarcoPopUp(1,4)">C1</div>
+			<div class="colGrid" ng-class="arrayClases[1][5]" ng-click="agregarBarcoPopUp(1,5)">D1</div>
+		</div>
+		<div class="row">
+			<div class="colGrid" ng-class="arrayClases[2][0]" ng-click="agregarBarcoPopUp(2,0)">A1</div>
+			<div class="colGrid" ng-class="arrayClases[2][1]" ng-click="agregarBarcoPopUp(2,1)">B1</div>
+			<div class="colGrid" ng-class="arrayClases[2][2]" ng-click="agregarBarcoPopUp(2,2)">C1</div>
+			<div class="colGrid" ng-class="arrayClases[2][3]" ng-click="agregarBarcoPopUp(2,3)">D1</div>
+			<div class="colGrid" ng-class="arrayClases[2][4]" ng-click="agregarBarcoPopUp(2,4)">C1</div>
+			<div class="colGrid" ng-class="arrayClases[2][5]" ng-click="agregarBarcoPopUp(2,5)">D1</div>
+		</div>
+		<div class="row">
+			<div class="colGrid" ng-class="arrayClases[3][0]" ng-click="agregarBarcoPopUp(3,0)">A1</div>
+			<div class="colGrid" ng-class="arrayClases[3][1]" ng-click="agregarBarcoPopUp(3,1)">B1</div>
+			<div class="colGrid" ng-class="arrayClases[3][2]" ng-click="agregarBarcoPopUp(3,2)">C1</div>
+			<div class="colGrid" ng-class="arrayClases[3][3]" ng-click="agregarBarcoPopUp(3,3)">D1</div>
+			<div class="colGrid" ng-class="arrayClases[3][4]" ng-click="agregarBarcoPopUp(3,4)">C1</div>
+			<div class="colGrid" ng-class="arrayClases[3][5]" ng-click="agregarBarcoPopUp(3,5)">D1</div>
+		</div>
+		<div class="row">
+			<div class="colGrid" ng-class="arrayClases[4][0]" ng-click="agregarBarcoPopUp(4,0)">A1</div>
+			<div class="colGrid" ng-class="arrayClases[4][1]" ng-click="agregarBarcoPopUp(4,1)">B1</div>
+			<div class="colGrid" ng-class="arrayClases[4][2]" ng-click="agregarBarcoPopUp(4,2)">C1</div>
+			<div class="colGrid" ng-class="arrayClases[4][3]" ng-click="agregarBarcoPopUp(4,3)">D1</div>
+			<div class="colGrid" ng-class="arrayClases[4][4]" ng-click="agregarBarcoPopUp(4,4)">C1</div>
+			<div class="colGrid" ng-class="arrayClases[4][5]" ng-click="agregarBarcoPopUp(4,5)">D1</div>
+		</div>
+		<div class="row">
+			<div class="colGrid" ng-class="arrayClases[5][0]" ng-click="agregarBarcoPopUp(5,0)">A1</div>
+			<div class="colGrid" ng-class="arrayClases[5][1]" ng-click="agregarBarcoPopUp(5,1)">B1</div>
+			<div class="colGrid" ng-class="arrayClases[5][2]" ng-click="agregarBarcoPopUp(5,2)">C1</div>
+			<div class="colGrid" ng-class="arrayClases[5][3]" ng-click="agregarBarcoPopUp(5,3)">D1</div>
+			<div class="colGrid" ng-class="arrayClases[5][4]" ng-click="agregarBarcoPopUp(5,4)">C1</div>
+			<div class="colGrid" ng-class="arrayClases[5][5]" ng-click="agregarBarcoPopUp(5,5)">D1</div>
+		</div>
+		<a class="button button-icon icon ion-arrow-down-a" ng-click="moverBarco('down')"></a>
+		<a class="button button-icon icon ion-arrow-up-a" ng-click="moverBarco('up')"></a>
+		<a class="button button-icon icon ion-arrow-left-a" ng-click="moverBarco('left')"></a>
+		<a class="button button-icon icon ion-arrow-right-a" ng-click="moverBarco('tight')"></a>
+		<button class="button button-block button-balanced" ng-click="showPopup()">JUGAR</button>
+	</ion-content>
 </ion-view>
