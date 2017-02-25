@@ -12,3 +12,37 @@
   height: 100px;
   border-style: solid;
   border-width: 0.5px; }
+
+.redBox {
+    background-color: red !important;
+}
+.ship-4-1-h{
+    background-image:url('../img/4/barco1-1.png')
+}
+.ship-4-2-h{
+    background-image:url('../img/4/barco1-2.png')
+}
+.ship-4-3-h{
+    background-image:url('../img/4/barco1-3.png')
+}
+.ship-4-4-h{
+    background-image:url('../img/4/barco1-4.png')
+}
+.ship-1-1-h{
+   background-image:url('../img/1/barco1.png')
+}
+.ship-2-1-h{
+    background-image:url('../img/2/barco1-1.png')
+}
+.ship-2-2-h{
+    background-image:url('../img/2/barco1-2.png')
+}
+.ship-3-1-h{
+    background-image:url('../img/3/barco1-1.png')
+}
+.ship-3-2-h{
+    background-image:url('../img/3/barco1-2.png')
+}
+.ship-3-3-h{
+    background-image:url('../img/3/barco1-3.png')
+}
