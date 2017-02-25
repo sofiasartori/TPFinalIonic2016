@@ -25,7 +25,7 @@ angular.module('starter.controllers', ['ngDragDrop'])
         var token = result.credential.accessToken;
         var user = result.user;
         $scope.modal.hide();
-        window.location.href="#/app/jugar";
+        window.location.href="#/app/buscador";
       }).catch(function(error) {
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -57,10 +57,11 @@ angular.module('starter.controllers', ['ngDragDrop'])
 
   // Perform the login action when the user submits the login form
   $scope.doLogin = function(loginUser, loginPassword) {
-    base.auth().signInWithEmailAndPassword(loginUser, loginPassword).then(function(result) {
+    firebase.auth().signInWithEmailAndPassword(loginUser, loginPassword).then(function(result) {
       console.log(JSON.stringify(result));
       $scope.modal.hide();
-      window.location.href="#/app/jugar"
+      window.location.href="#/app/buscador";
+      $scope.enviar();
     }, function(error) {                  
           var errorCode = error.code;
           var errorMessage = error.message;
@@ -79,15 +80,44 @@ angular.module('starter.controllers', ['ngDragDrop'])
           console.log(error);
 
       });
+  }
 
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
+    $scope.enviar=function(){
+      var http = new XMLHttpRequest();
+      var url =  'https://fcm.googleapis.com/fcm/send';
     
-  };
-})
+      var params = JSON.stringify({
+          "to":"/topics/all",
+          "notification":{
+              "title":"Batalla Naval",  //Any value
+              "body":"Hay una nueva batalla",  //Any value
+              "sound":"default", //If you want notification sound
+              "click_action":"FCM_PLUGIN_ACTIVITY",  //Must be present for Android
+              "icon":"fcm_push_icon"  //White icon Android resource
+            },
+              "priority":"high" //If not set, notification won't be delivered on completely closed iOS app
+        });
 
-.controller('JugarCtrl', function($scope, $ionicPopup) {
-  $scope.posIniF;
+      http.open("POST", url, true);
+        http.setRequestHeader("Content-type", "application/json");
+        http.setRequestHeader('Authorization', 'key=AAAA7lgZHa0:APA91bFU108VnIMCYVNrt9dByKE8bs_KMquBR2d8_MxDJoXhhJ0Z4Vs6wKzYamsvZa9zd7MBoOsLFI_VukAF4WRqqLdyguCLkz_FoEolBuXKoPBOZ3x-JOZW4tKvb9MzqVQ6KbaaWu1J');
+
+        http.onreadystatechange = function() {
+            if(http.readyState == 4 && http.status == 200) {
+                console.log(http.responseText);
+            }
+        }
+      http.send(params);
+    }
+}).controller('BuscadorCtrl', function ($scope, $ionicPopup) {
+    $scope.irAjugar = function () {
+      window.location.href = "#/app/jugar";
+    }
+  })
+
+  .controller('JugarCtrl', function ($scope, $ionicPopup) {
+    var baseDatos = new Firebase("https://batalla-naval-3d1b2.firebaseio.com");
+    $scope.posIniF;
     $scope.posIniC;
     $scope.barcoActual = null;
     $scope.sePuedeGuardar = false;
@@ -497,7 +527,25 @@ angular.module('starter.controllers', ['ngDragDrop'])
       $arrayBarcos = [];
     }
     $scope.iniciarPartida = function () {
-
+      var misBarcos = [];
+      for (var i = 0; i < $scope.arrayBarcos.length; i++) {
+        //$scope.dibujarBarco(arrayBarcos[i]);
+        var barco = $scope.arrayBarcos[i];
+        misBarcos.push({
+          posIniC: barco.posIniC,
+          posIniF: barco.posIniF,
+          size: barco.size,
+          isHorizontal: barco.isHorizontal,
+        })
+      }
+      var miPartida = {
+        usuario: "pepe",
+        iniciada: false,
+        barcos: misBarcos
+      }
+      console.log("mipartida: " + JSON.stringify(miPartida))
+      baseDatos.push(miPartida);
+      window.location.href = "#/app/buscador";
     }
-})
+  })
 

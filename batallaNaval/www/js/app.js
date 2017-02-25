@@ -55,7 +55,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic.cloud'])
     url: '/buscador',
     views: {
       'menuContent': {
-        templateUrl: 'templates/buscador.html'
+        templateUrl: 'templates/buscador.html',
+        controller: 'BuscadorCtrl'
       }
     }
   })
