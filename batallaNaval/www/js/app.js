@@ -55,7 +55,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic.cloud'])
     url: '/buscador',
     views: {
       'menuContent': {
-        templateUrl: 'templates/buscador.html'
+        templateUrl: 'templates/buscador.html',
+        controller: 'BuscadorCtrl'
       }
     }
   })
@@ -73,21 +74,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ionic.cloud'])
       url: '/acercaDe',
       views: {
         'menuContent': {
-          templateUrl: 'templates/acercaDe.html',
-          controller: 'PlaylistsCtrl'
+          templateUrl: 'templates/acercaDe.html'
         }
       }
     })
 
-  .state('app.single', {
-    url: '/playlists/:playlistId',
+  .state('app.login', {
+    url: '/login',
     views: {
       'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
+        templateUrl: 'templates/login.html'
       }
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/acercaDe');
+  $urlRouterProvider.otherwise('/app/login');
 });

@@ -1,7 +1,9 @@
-<ion-view view-title="Jugar">
+<ion-view view-title="Partida Nueva">
 	<ion-content>
 		<p>Eleg&iacute; y posicion&aacute; los barcos!</p>
-
+		<button class="button button-dark button-full" ng-click="guardarBarco()">
+			Guardar Barco
+		</button>
 		<div class="row">
 			<div class="colGrid" ng-class="arrayClases[0][0]" ng-click="agregarBarcoPopUp(0,0)">A1</div>
 			<div class="colGrid" ng-class="arrayClases[0][1]" ng-click="agregarBarcoPopUp(0,1)">B1</div>
@@ -53,7 +55,9 @@
 		<a class="button button-icon icon ion-arrow-down-a" ng-click="moverBarco('down')"></a>
 		<a class="button button-icon icon ion-arrow-up-a" ng-click="moverBarco('up')"></a>
 		<a class="button button-icon icon ion-arrow-left-a" ng-click="moverBarco('left')"></a>
-		<a class="button button-icon icon ion-arrow-right-a" ng-click="moverBarco('tight')"></a>
-		<button class="button button-block button-balanced" ng-click="showPopup()">JUGAR</button>
+		<a class="button button-icon icon ion-arrow-right-a" ng-click="moverBarco('right')"></a>
+		<a class="button button-icon icon ion-arrow-return-right" ng-click="rotarBarco()"></a>
+
+		<button class="button button-block button-positive" ng-click="iniciarPartida()">Iniciar Partida</button>
 	</ion-content>
 </ion-view>

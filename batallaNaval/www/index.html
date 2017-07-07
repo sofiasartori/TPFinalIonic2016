@@ -7,19 +7,10 @@
 
     <link rel="manifest" href="manifest.json">
 
-    <!-- un-comment this code to enable service worker
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(() => console.log('service worker installed'))
-          .catch(err => console.log('Error', err));
-      }
-    </script>-->
-
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-
     
+    <script type="text/javascript" src="https://cdn.firebase.com/js/client/2.2.8/firebase.js"></script>
     <script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
     <script>
       // Initialize Firebase
@@ -32,11 +23,11 @@
       };
       firebase.initializeApp(config);
     </script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
     <script src="lib/ionic.cloud.min.js"></script>
-
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 

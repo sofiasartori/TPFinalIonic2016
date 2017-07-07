@@ -1,61 +1,122 @@
 angular.module('starter.controllers', ['ngDragDrop'])
 
-  .controller('AppCtrl', function ($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicPopup) {
 
-    // With the new view caching in Ionic, Controllers are only called
-    // when they are recreated or on app start, instead of every page change.
-    // To listen for when this page is active (for example, to refresh data),
-    // listen for the $ionicView.enter event:
-    //$scope.$on('$ionicView.enter', function(e) {
-    //});
+  var base = new Firebase("https://batalla-naval-3d1b2.firebaseio.com");
+  var provider = new firebase.auth.GoogleAuthProvider();
+  $scope.loginUser;
+  $scope.loginPassword;
+  $scope.loginData = {};
 
-    // Form data for the login modal
-    $scope.loginData = {};
+  // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/login.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
 
-    // Create the login modal that we will use later
-    $ionicModal.fromTemplateUrl('templates/login.html', {
-      scope: $scope
-    }).then(function (modal) {
-      $scope.modal = modal;
-    });
+  // Triggered in the login modal to close it
+  $scope.closeLogin = function() {
+    $scope.modal.hide();
+  };
 
-    // Triggered in the login modal to close it
-    $scope.closeLogin = function () {
+  $scope.login = function() {
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+        var token = result.credential.accessToken;
+        var user = result.user;
+        $scope.modal.hide();
+        window.location.href="#/app/buscador";
+      }).catch(function(error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        var email = error.email;
+        var credential = error.credential;
+      });
+  };
+
+  $scope.logout = function(){
+    $scope.data = {};
+
+    // An elaborate, custom popup
+    var myPopup = $ionicPopup.show({
+      title: 'Desea cerrar sesion?',
+      scope: $scope,
+      buttons: [
+        { text: 'No' },
+        {
+          text: 'Si',
+          type: 'button-positive',
+          onTap: function(e) {
+            firebase.auth().signOut();
+            $scope.modal.show();
+          }
+        }
+        ]
+      });
+  }
+
+  // Perform the login action when the user submits the login form
+  $scope.doLogin = function(loginUser, loginPassword) {
+    firebase.auth().signInWithEmailAndPassword(loginUser, loginPassword).then(function(result) {
+      console.log(JSON.stringify(result));
       $scope.modal.hide();
-    };
+      window.location.href="#/app/buscador";
+      $scope.enviar();
+    }, function(error) {                  
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          if (errorCode == 'auth/wrong-password') {
+            alert('La contraseña es incorrecta');
+          } else {
+            if(errorCode=='auth/user-not-found')
+            {
+              alert('El usuario no existe');
+            }
+            else
+            {
+               alert(errorMessage);
+            }
+          }
+          console.log(error);
 
-    // Open the login modal
-    $scope.login = function () {
-      $scope.modal.show();
-    };
+      });
+  }
 
-    // Perform the login action when the user submits the login form
-    $scope.doLogin = function () {
-      console.log('Doing login', $scope.loginData);
+    $scope.enviar=function(){
+      var http = new XMLHttpRequest();
+      var url =  'https://fcm.googleapis.com/fcm/send';
+    
+      var params = JSON.stringify({
+          "to":"/topics/all",
+          "notification":{
+              "title":"Batalla Naval",  //Any value
+              "body":"Hay una nueva batalla",  //Any value
+              "sound":"default", //If you want notification sound
+              "click_action":"FCM_PLUGIN_ACTIVITY",  //Must be present for Android
+              "icon":"fcm_push_icon"  //White icon Android resource
+            },
+              "priority":"high" //If not set, notification won't be delivered on completely closed iOS app
+        });
 
-      // Simulate a login delay. Remove this and replace with your login
-      // code if using a login system
-      $timeout(function () {
-        $scope.closeLogin();
-      }, 1000);
-    };
-  })
+      http.open("POST", url, true);
+        http.setRequestHeader("Content-type", "application/json");
+        http.setRequestHeader('Authorization', 'key=AAAA7lgZHa0:APA91bFU108VnIMCYVNrt9dByKE8bs_KMquBR2d8_MxDJoXhhJ0Z4Vs6wKzYamsvZa9zd7MBoOsLFI_VukAF4WRqqLdyguCLkz_FoEolBuXKoPBOZ3x-JOZW4tKvb9MzqVQ6KbaaWu1J');
 
-  .controller('PlaylistsCtrl', function ($scope) {
-    $scope.playlists = [
-      { title: 'Reggae', id: 1 },
-      { title: 'Chill', id: 2 },
-      { title: 'Dubstep', id: 3 },
-      { title: 'Indie', id: 4 },
-      { title: 'Rap', id: 5 },
-      { title: 'Cowbell', id: 6 }
-    ];
-  })
-
-  .controller('PlaylistCtrl', function ($scope, $stateParams, $apply) {
+        http.onreadystatechange = function() {
+            if(http.readyState == 4 && http.status == 200) {
+                console.log(http.responseText);
+            }
+        }
+      http.send(params);
+    }
+}).controller('BuscadorCtrl', function ($scope, $ionicPopup) {
+    $scope.irAjugar = function () {
+      window.location.href = "#/app/jugar";
+    }
   })
 
   .controller('JugarCtrl', function ($scope, $ionicPopup) {
+    var baseDatos = new Firebase("https://batalla-naval-3d1b2.firebaseio.com");
     $scope.posIniF;
     $scope.posIniC;
     $scope.barcoActual = null;
@@ -78,18 +139,38 @@ angular.module('starter.controllers', ['ngDragDrop'])
       ['', '', '', '', '', ''],
       ['', '', '', '', '', '']
     ];
-    $arrayBarcos = [];
-
+    $scope.maximosBarcos = [2, 2, 1, 1];
+    $scope.arrayBarcos = [];
+    $scope.bloquearTablero = false;
     $scope.agregarBarcoPopUp = function (posIniF, posIniC) {
+
       $scope.posIniF = posIniF;
       $scope.posIniC = posIniC;
       $scope.data = {};
+      var botonesCasilleros = ['<button ng-click="agregarBarco(1)" class="button button-positive button-full">Un Casillero</button> ',
+        '<button ng-click="agregarBarco(2)" class="button button-positive button-full">Dos Casilleros</button> ',
+        '<button ng-click="agregarBarco(3)" class="button button-positive button-full">Tres Casilleros</button> ',
+        '<button ng-click="agregarBarco(4)" class="button button-positive button-full">Cuatro Casilleros</button> '];
+      function getCasilleros() {
+        var maximos = [2, 2, 1, 1];
+        var casillerosBoton = ''
+        for (var i = 0; i < $scope.arrayBarcos.length; i++) {
+          var barco = $scope.arrayBarcos[i];
+          maximos[barco.size - 1]--;
+        }
+        for (var i = 0; i < maximos.length; i++) {
+          if (maximos[i] != 0) {
+            casillerosBoton += botonesCasilleros[i];
+          }
+        }
+        return casillerosBoton;
+      }
+      if ($scope.bloquearTablero || !getCasilleros())
+        return;
       $scope.cambiarBarcosPorPuntos();
       $scope.myPopup = $ionicPopup.show({
-        template: '<button ng-click="agregarBarco(1)" class="button button-positive button-full">Un Casillero</button> ' +
-        '<button ng-click="agregarBarco(2)" class="button button-positive button-full">Dos Casilleros</button> ' +
-        '<button ng-click="agregarBarco(3)" class="button button-positive button-full">Tres Casilleros</button> ' +
-        '<button ng-click="agregarBarco(4)" class="button button-positive button-full">Cuatro Casilleros</button> ',
+        template: getCasilleros()
+        ,
         title: 'Elegí tu barco',
         scope: $scope,
         buttons: [
@@ -124,6 +205,7 @@ angular.module('starter.controllers', ['ngDragDrop'])
 
     }
     $scope.agregarBarco = function (size) {
+    $scope.bloquearTablero = true;
       $scope.sePuedeGuardar = false;
       $scope.myPopup.close();
       //alert($scope.posIniF + "-" + $scope.posIniC)
@@ -231,7 +313,6 @@ angular.module('starter.controllers', ['ngDragDrop'])
         case "up":
           if (barco.posIniF != 0) {
             if (barco.isHorizontal) {
-              console.log("asdkj")
               console.log(JSON.stringify($scope.barcoActual))
               $scope.borrarBarcoHorizontal(barco);
               $scope.barcoActual.posIniF--;
@@ -243,16 +324,56 @@ angular.module('starter.controllers', ['ngDragDrop'])
               $scope.barcoActual.posIniF--;
               $scope.pintarBarcoVertical(barco);
             }
-            
-          }
+
+			}
           break;
         case "down":
-
+          if (barco.posIniF != 5) {
+            if (barco.isHorizontal) {
+              console.log(JSON.stringify($scope.barcoActual))
+              $scope.borrarBarcoHorizontal(barco);
+              $scope.barcoActual.posIniF++;
+              console.log(JSON.stringify($scope.barcoActual))
+              $scope.pintarBarcoHorizontal(barco);
+            }
+            else {
+              $scope.borrarBarcoVertical(barco);
+              $scope.barcoActual.posIniF++;
+              $scope.pintarBarcoVertical(barco);
+            }
+          }
           break;
         case "left":
-
+          if (barco.posIniC != 0) {
+            if (barco.isHorizontal) {
+              console.log(JSON.stringify($scope.barcoActual))
+              $scope.borrarBarcoHorizontal(barco);
+              $scope.barcoActual.posIniC--;
+              console.log(JSON.stringify($scope.barcoActual))
+              $scope.pintarBarcoHorizontal(barco);
+            }
+            else {
+              $scope.borrarBarcoVertical(barco);
+              $scope.barcoActual.posIniC--;
+              $scope.pintarBarcoVertical(barco);
+            }
+          }
           break;
         case "right":
+          if (barco.posIniC != 5) {
+            if (barco.isHorizontal) {
+              console.log(JSON.stringify($scope.barcoActual))
+              $scope.borrarBarcoHorizontal(barco);
+              $scope.barcoActual.posIniC++;
+              console.log(JSON.stringify($scope.barcoActual))
+              $scope.pintarBarcoHorizontal(barco);
+            }
+            else {
+              $scope.borrarBarcoVertical(barco);
+              $scope.barcoActual.posIniC++;
+              $scope.pintarBarcoVertical(barco);
+            }
+          }
 
           break;
 
@@ -352,4 +473,81 @@ angular.module('starter.controllers', ['ngDragDrop'])
           break;
       }
     }
-  });
+	
+    $scope.dibujarBarco = function (barco) {
+      if (barco.isHorizontal) {
+        $scope.pintarBarcoHorizontal(barco);
+      } else {
+        $scope.pintarBarcoVertical(barco);
+      }
+    }
+    $scope.rotarBarco = function () {
+      if ($scope.barcoActual.isHorizontal) {
+        $scope.borrarBarcoHorizontal($scope.barcoActual);
+      } else {
+        $scope.borrarBarcoVertical($scope.barcoActual);
+      }
+      $scope.barcoActual.isHorizontal = !$scope.barcoActual.isHorizontal;
+      if ($scope.barcoActual.isHorizontal) {
+        $scope.pintarBarcoHorizontal($scope.barcoActual);
+      } else {
+        $scope.pintarBarcoVertical($scope.barcoActual);
+      }
+    }
+    $scope.guardarBarco = function () {
+      if ($scope.sePuedeGuardar) {
+        var barco = new Barco($scope.barcoActual.posIniC, $scope.barcoActual.posIniF,
+          $scope.barcoActual.size, $scope.barcoActual.isHorizontal)
+        $scope.arrayBarcos.push(barco);
+        $scope.barcoActual = null;
+        $scope.bloquearTablero = false;
+        $scope.dibujarTodos();
+      }
+    }
+    $scope.dibujarTodos = function () {
+      var arrayBarcos = $scope.arrayBarcos;
+      for (var i = 0; i < arrayBarcos.length; i++) {
+        $scope.dibujarBarco(arrayBarcos[i]);
+      }
+    }
+    $scope.limpiarGrafico = function () {
+      $scope.arrayTableroOcupado = [
+        [false, false, false, false, false, false],
+        [false, false, false, false, false, false],
+        [false, false, false, false, false, false],
+        [false, false, false, false, false, false],
+        [false, false, false, false, false, false],
+        [false, false, false, false, false, false]
+      ];
+      $scope.arrayClases = [
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', '']
+      ];
+      $arrayBarcos = [];
+    }
+    $scope.iniciarPartida = function () {
+      var misBarcos = [];
+      for (var i = 0; i < $scope.arrayBarcos.length; i++) {
+        //$scope.dibujarBarco(arrayBarcos[i]);
+        var barco = $scope.arrayBarcos[i];
+        misBarcos.push({
+          posIniC: barco.posIniC,
+          posIniF: barco.posIniF,
+          size: barco.size,
+          isHorizontal: barco.isHorizontal,
+        })
+      }
+      var miPartida = {
+        usuario: "pepe",
+        iniciada: false,
+        barcos: misBarcos
+      }
+      console.log("mipartida: " + JSON.stringify(miPartida))
+      baseDatos.push(miPartida);
+      window.location.href = "#/app/buscador";
+    }
+  })
