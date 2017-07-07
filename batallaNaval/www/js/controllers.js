@@ -205,7 +205,9 @@ angular.module('starter.controllers', ['ngDragDrop'])
 
     }
     $scope.agregarBarco = function (size) {
-    $scope.bloquearTablero = true;
+
+      $scope.bloquearTablero = true;
+
       $scope.sePuedeGuardar = false;
       $scope.myPopup.close();
       //alert($scope.posIniF + "-" + $scope.posIniC)
@@ -323,9 +325,7 @@ angular.module('starter.controllers', ['ngDragDrop'])
               $scope.borrarBarcoVertical(barco);
               $scope.barcoActual.posIniF--;
               $scope.pintarBarcoVertical(barco);
-            }
-
-			}
+          }
           break;
         case "down":
           if (barco.posIniF != 5) {
@@ -473,7 +473,7 @@ angular.module('starter.controllers', ['ngDragDrop'])
           break;
       }
     }
-	
+
     $scope.dibujarBarco = function (barco) {
       if (barco.isHorizontal) {
         $scope.pintarBarcoHorizontal(barco);
@@ -530,24 +530,6 @@ angular.module('starter.controllers', ['ngDragDrop'])
       $arrayBarcos = [];
     }
     $scope.iniciarPartida = function () {
-      var misBarcos = [];
-      for (var i = 0; i < $scope.arrayBarcos.length; i++) {
-        //$scope.dibujarBarco(arrayBarcos[i]);
-        var barco = $scope.arrayBarcos[i];
-        misBarcos.push({
-          posIniC: barco.posIniC,
-          posIniF: barco.posIniF,
-          size: barco.size,
-          isHorizontal: barco.isHorizontal,
-        })
-      }
-      var miPartida = {
-        usuario: "pepe",
-        iniciada: false,
-        barcos: misBarcos
-      }
-      console.log("mipartida: " + JSON.stringify(miPartida))
-      baseDatos.push(miPartida);
-      window.location.href = "#/app/buscador";
+
     }
-  })
+  });
