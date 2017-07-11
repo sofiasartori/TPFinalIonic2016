@@ -1,4 +1,8 @@
 {
   "name": "batallaNaval",
-  "app_id": "26f96b04"
+  "app_id": "26f96b04",
+  "type": "ionic1",
+  "watchPatterns": [
+    "scss/**/*"
+  ]
 }

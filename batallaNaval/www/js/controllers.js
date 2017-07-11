@@ -1,6 +1,4 @@
-angular.module('starter.controllers', ['ngDragDrop'])
-
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicPopup) {
+angular.module('starter.controllers', ['ngDragDrop','ngCordova']).controller('AppCtrl', function ($scope, $ionicModal, $timeout, $ionicPopup,$cordovaBarcodeScanner) {
 
   var base = new Firebase("https://batalla-naval-3d1b2.firebaseio.com");
   var provider = new firebase.auth.GoogleAuthProvider();
@@ -11,30 +9,33 @@ angular.module('starter.controllers', ['ngDragDrop'])
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope
-  }).then(function(modal) {
+  }).then(function (modal) {
     $scope.modal = modal;
   });
 
   // Triggered in the login modal to close it
-  $scope.closeLogin = function() {
+  $scope.closeLogin = function () {
     $scope.modal.hide();
   };
 
-  $scope.login = function() {
-    firebase.auth().signInWithPopup(provider).then(function(result) {
-        var token = result.credential.accessToken;
-        var user = result.user;
-        $scope.modal.hide();
-        window.location.href="#/app/buscador";
-      }).catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        var email = error.email;
-        var credential = error.credential;
-      });
+  $scope.login = function () {
+    firebase.auth().signInWithPopup(provider).then(function (result) {
+      console.log("Result: " + JSON.stringify(result));
+      var token = result.credential.accessToken;
+      var user = result.user;
+      
+      $scope.modal.hide();
+      window.location.href = "#/app/buscador";
+    }).catch(function (error) {
+      console.log("Result-error: " + JSON.stringify(error));
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      var email = error.email;
+      var credential = error.credential;
+    });
   };
 
-  $scope.logout = function(){
+  $scope.logout = function () {
     $scope.data = {};
 
     // An elaborate, custom popup
@@ -46,74 +47,83 @@ angular.module('starter.controllers', ['ngDragDrop'])
         {
           text: 'Si',
           type: 'button-positive',
-          onTap: function(e) {
+          onTap: function (e) {
             firebase.auth().signOut();
             $scope.modal.show();
           }
         }
-        ]
-      });
+      ]
+    });
   }
 
   // Perform the login action when the user submits the login form
-  $scope.doLogin = function(loginUser, loginPassword) {
-    firebase.auth().signInWithEmailAndPassword(loginUser, loginPassword).then(function(result) {
+  $scope.doLogin = function (loginUser, loginPassword) {
+    firebase.auth().signInWithEmailAndPassword(loginUser, loginPassword).then(function (result) {
       console.log(JSON.stringify(result));
       $scope.modal.hide();
-      window.location.href="#/app/buscador";
+      window.location.href = "#/app/buscador";
       $scope.enviar();
-    }, function(error) {                  
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          if (errorCode == 'auth/wrong-password') {
-            alert('La contraseña es incorrecta');
-          } else {
-            if(errorCode=='auth/user-not-found')
-            {
-              alert('El usuario no existe');
-            }
-            else
-            {
-               alert(errorMessage);
-            }
-          }
-          console.log(error);
+    }, function (error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      if (errorCode == 'auth/wrong-password') {
+        alert('La contraseña es incorrecta');
+      } else {
+        if (errorCode == 'auth/user-not-found') {
+          alert('El usuario no existe');
+        }
+        else {
+          alert(errorMessage);
+        }
+      }
+      console.log(error);
 
-      });
+    });
   }
 
-    $scope.enviar=function(){
-      var http = new XMLHttpRequest();
-      var url =  'https://fcm.googleapis.com/fcm/send';
-    
-      var params = JSON.stringify({
-          "to":"/topics/all",
-          "notification":{
-              "title":"Batalla Naval",  //Any value
-              "body":"Hay una nueva batalla",  //Any value
-              "sound":"default", //If you want notification sound
-              "click_action":"FCM_PLUGIN_ACTIVITY",  //Must be present for Android
-              "icon":"fcm_push_icon"  //White icon Android resource
-            },
-              "priority":"high" //If not set, notification won't be delivered on completely closed iOS app
-        });
+  $scope.enviar = function () {
+    var http = new XMLHttpRequest();
+    var url = 'https://fcm.googleapis.com/fcm/send';
 
-      http.open("POST", url, true);
-        http.setRequestHeader("Content-type", "application/json");
-        http.setRequestHeader('Authorization', 'key=AAAA7lgZHa0:APA91bFU108VnIMCYVNrt9dByKE8bs_KMquBR2d8_MxDJoXhhJ0Z4Vs6wKzYamsvZa9zd7MBoOsLFI_VukAF4WRqqLdyguCLkz_FoEolBuXKoPBOZ3x-JOZW4tKvb9MzqVQ6KbaaWu1J');
+    var params = JSON.stringify({
+      "to": "/topics/all",
+      "notification": {
+        "title": "Batalla Naval",  //Any value
+        "body": "Hay una nueva batalla",  //Any value
+        "sound": "default", //If you want notification sound
+        "click_action": "FCM_PLUGIN_ACTIVITY",  //Must be present for Android
+        "icon": "fcm_push_icon"  //White icon Android resource
+      },
+      "priority": "high" //If not set, notification won't be delivered on completely closed iOS app
+    });
 
-        http.onreadystatechange = function() {
-            if(http.readyState == 4 && http.status == 200) {
-                console.log(http.responseText);
-            }
-        }
-      http.send(params);
+    http.open("POST", url, true);
+    http.setRequestHeader("Content-type", "application/json");
+    http.setRequestHeader('Authorization', 'key=AAAA7lgZHa0:APA91bFU108VnIMCYVNrt9dByKE8bs_KMquBR2d8_MxDJoXhhJ0Z4Vs6wKzYamsvZa9zd7MBoOsLFI_VukAF4WRqqLdyguCLkz_FoEolBuXKoPBOZ3x-JOZW4tKvb9MzqVQ6KbaaWu1J');
+
+    http.onreadystatechange = function () {
+      if (http.readyState == 4 && http.status == 200) {
+        console.log(http.responseText);
+      }
     }
-}).controller('BuscadorCtrl', function ($scope, $ionicPopup) {
-    $scope.irAjugar = function () {
-      window.location.href = "#/app/jugar";
-    }
-  })
+    http.send(params);
+  }
+}).controller('BuscadorCtrl', function ($scope, $ionicPopup,$cordovaBarcodeScanner) {
+  $scope.irAjugar = function () {
+    window.location.href = "#/app/jugar";
+  }
+   $scope.leerQR = function () {
+      $cordovaBarcodeScanner
+      .scan()
+      .then(function(barcodeData) {
+        alert(JSON.stringify(barcodeData));
+        alert("QR: " +barcodeData.text )
+      }, function(error) {
+        alert(error)
+      });
+  }
+  
+})
 
   .controller('JugarCtrl', function ($scope, $ionicPopup) {
     var baseDatos = new Firebase("https://batalla-naval-3d1b2.firebaseio.com");
@@ -325,6 +335,7 @@ angular.module('starter.controllers', ['ngDragDrop'])
               $scope.borrarBarcoVertical(barco);
               $scope.barcoActual.posIniF--;
               $scope.pintarBarcoVertical(barco);
+            }
           }
           break;
         case "down":
